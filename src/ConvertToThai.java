@@ -134,10 +134,10 @@ public class ConvertToThai  {
 
 public static void main(String[] args) {
     System.out.println("Negative value of 0 : " + new ConvertToThai().getText(0.00000000));
-    System.out.println("Positive value of 1222.22 : " + new ConvertToThai().getText(18333322.02));
-    System.out.println("Positive value of 1222.21 : " + new ConvertToThai().getText(1222.216));
-    System.out.println("Positive value of 1211.11 : " + new ConvertToThai().getText(0.11));
-    System.out.println("Positive value of 2211222.1222 : " + new ConvertToThai().getText(-1.2222));
+    System.out.println("Positive value of 18333322.02 : " + new ConvertToThai().getText(18333322.02));
+    System.out.println("Positive value of 1222.216 : " + new ConvertToThai().getText(1222.216));
+    System.out.println("Positive value of 0.11 : " + new ConvertToThai().getText(0.11));
+    System.out.println("Positive value of -1.2222 : " + new ConvertToThai().getText(-1.2222));
     System.out.println("Positive value of 0882.2312 : " + new ConvertToThai().getText(0882.2312));
     System.out.println("Positive value of 1223.092 : " + new ConvertToThai().getText(1223.092));
     System.out.println("Positive value of 123214124.22 : " + new ConvertToThai().getText(123214124.22));
