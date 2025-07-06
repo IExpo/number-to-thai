@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Objects;
 
-public class ConvertToThai {
+public final class ConvertToThai {
 
     private static final String[] SCALE_TH = {"ล้าน", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", ""};
     private static final String[] DIGIT_TH = {"ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด",
@@ -13,23 +14,17 @@ public class ConvertToThai {
     private static final String[] SYMBOLS_TH = {"ลบ", "บาท", "ถ้วน", "สตางค์", "ยี่", "เอ็ด", ",", " ", "฿"};
     private static final String[] ZERO_SYMBOLS_TH = {"ศูนย์"};
 
-    public static String format(double amount) {
-        return toThaiBahtText(BigDecimal.valueOf(amount));
-    }
-
-    public static String format(int amount) {
-        return toThaiBahtText(BigDecimal.valueOf(amount));
-    }
-
-    public static String format(long amount) {
-        return toThaiBahtText(BigDecimal.valueOf(amount));
+    /** Converts a numeric amount to Thai Baht text. Accepts String, Double, Integer, etc. */
+    public static String format(Number amount) {
+        Objects.requireNonNull(amount, "amount");
+        return toThaiBahtText(new BigDecimal(String.valueOf(amount)));
     }
 
     public static String format(String amount) {
-        String sanitized = amount;
-        for (String element : SYMBOLS_TH) {
-            sanitized = sanitized.replace(element, "");
+        if (amount == null || amount.isBlank()) {
+            return ZERO_SYMBOLS_TH[0] + SYMBOLS_TH[1] + SYMBOLS_TH[2];
         }
+        String sanitized = amount.replaceAll("[, ฿]", "");
         return toThaiBahtText(new BigDecimal(sanitized.trim()));
     }
 
@@ -81,25 +76,27 @@ public class ConvertToThai {
                 digitText = SYMBOLS_TH[4];
             }
 
-            if (1 == digit) {
-                switch (scaleIdx) {
-                    case 0:
-                    case 6:
-                        builder.append((index < digits.length) ? SYMBOLS_TH[5] : digitText);
-                        break;
-                    case 1:
-                        break;
-                    default:
-                        builder.append(digitText);
-                        break;
+            switch (digit) {
+                case 1 -> {
+                    switch (scaleIdx) {
+                        case 0:
+                        case 6:
+                            builder.append((index < digits.length) ? SYMBOLS_TH[5] : digitText);
+                            break;
+                        case 1:
+                            break;
+                        default:
+                            builder.append(digitText);
+                            break;
+                    }
                 }
-            } else if (0 == digit) {
-                if (0 == scaleIdx) {
-                    builder.append(SCALE_TH[scaleIdx]);
+                case 0 -> {
+                    if (0 == scaleIdx) {
+                        builder.append(SCALE_TH[scaleIdx]);
+                    }
+                    continue;
                 }
-                continue;
-            } else {
-                builder.append(digitText);
+                default -> builder.append(digitText);
             }
             builder.append(SCALE_TH[scaleIdx]);
         }
